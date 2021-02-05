@@ -70,6 +70,8 @@ def parse_csv(csv_file):
     next(csv_iter) # Skip the header row.
     # Clean each row using the row cleaning function
     # specific to the filename.
-    cleaned_tuples = (nt_class(*cleaning_dict[filename](row)) for row in csv_iter)
+    cleaned_tuples = (nt_class( # Create a named tuple out of...
+                                *cleaning_dict[filename](row)) # the unpacked list of cleaned data...
+                                for row in csv_iter) # from each row in the file.
     yield from cleaned_tuples
 
