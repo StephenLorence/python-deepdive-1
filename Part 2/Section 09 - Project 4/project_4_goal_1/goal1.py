@@ -7,16 +7,28 @@
 # For now these four iterators are just separate, independent iterators.
 
 from goal1functions import *
+import itertools
 
-employment = 'project_4_description/employment.csv'
-personal_info = 'project_4_description/personal_info.csv'
-update_status = 'project_4_description/update_status.csv'
-vehicles = 'project_4_description/vehicles.csv'
+# Generate absolute file paths for source files.
+employment = 'c:\\Users\\Stephen\\Documents\\GitHub\\python-deepdive\\Part 2\\Section 09 - Project 4\\project_4_goal_1\\data\\employment.csv'
+personal_info = 'c:\\Users\\Stephen\\Documents\\GitHub\\python-deepdive\\Part 2\\Section 09 - Project 4\\project_4_goal_1\\data\\personal_info.csv'
+update_status = 'c:\\Users\\Stephen\\Documents\\GitHub\\python-deepdive\\Part 2\\Section 09 - Project 4\\project_4_goal_1\\data\\update_status.csv'
+vehicles = 'c:\\Users\\Stephen\\Documents\\GitHub\\python-deepdive\\Part 2\\Section 09 - Project 4\\project_4_goal_1\\data\\vehicles.csv'
 
-employment_tuple = create_namedtuple_from_csv_iterator(employment)
+# Create (lazy) iterators of cleaned data from each source file.
+# Each row returned will be in an appropriately formatted
+# named tuple.
+employment_rows = parse_csv(employment) # Create employment iterator.
+personal_info_rows = parse_csv(personal_info) # Create personal info iterator.
+update_status_rows = parse_csv(update_status) # Create update status iterator.
+vehicles_rows = parse_csv(vehicles) # Create vehicles iterator.
 
-print(employment_tuple('Stiedemann-Bailey', 'Research and Development', '29-0890771', '100-53-9824'))
+rows_list = [employment_rows, personal_info_rows, update_status_rows, vehicles_rows]
 
+
+for item in rows_list:
+    for row in itertools.islice(item, 0, 5):
+        print(row)
 
 # employment:
 # ['employer', 'department', 'employee_id', 'ssn']
@@ -31,7 +43,7 @@ print(employment_tuple('Stiedemann-Bailey', 'Research and Development', '29-0890
 #update_status:
 # ['ssn', 'last_updated', 'created']
 # ['100-53-9824', '2017-10-07T00:14:42Z', '2016-01-24T21:19:30Z']
-#       str             datetime                    datetime
+#       int             datetime                    datetime
 
 # vehicles:
 # ['ssn', 'vehicle_make', 'vehicle_model', 'model_year']
