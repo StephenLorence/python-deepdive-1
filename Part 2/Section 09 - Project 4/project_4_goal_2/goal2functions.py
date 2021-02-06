@@ -99,8 +99,46 @@ def create_combined_namedtuple(dic):
     employee = Employee(*dic.values())
     return employee
 
+# Take in two iterables of named tuples and align the second
+# iterable's contents to line up with the contents of the first
+# iterable based on the ssn of each named tuple.
+def find_ssn(primary, secondary):
+    results = []
+    for p in primary:
+        for s in secondary:
+            # Find the row in the secondary iterable that
+            # has the same ssn as the given row in the primary
+            # iterable, then tack that row onto the result list.
+            if s.ssn == p.ssn:
+                results.append(s)
+                break
+    return results
+
+# Take in multiple iterables and align the contents of each
+# iterable to match the order of the first iterable provided,
+# based on the ssn of each named tuple in each iterable.
+def align_ssns(*args):
+    # Make sure each iterable is a list because we'll be
+    # running through them multiple times, so an iterator
+    # would be exhausted.
+    args = [list(arg) for arg in args]
+    # Split the arguments into the primary iterable and
+    # the list of secondary iterables.
+    primary, *secondaries = args
+    aligned_rows = []
+    # For each iterable in the 'secondaries' list, run the
+    # iterable through the 'find_ssn' function, comparing
+    # against the primary iterable.
+    for secondary in secondaries:
+        aligned_rows.append(find_ssn(primary, secondary))
+    yield from (zip(primary, *aligned_rows))
+
+
+
+
 # Take in a variable number of iterables of named tuples and
 # align them based on the ssn value of each named tuple.
+'''
 def align_all_rows(*args):
     args = [list(arg) for arg in args]
     index = 0
@@ -137,3 +175,4 @@ def align_all_rows(*args):
             final_list = new_list
         index += 1
     yield from final_list
+'''
