@@ -33,9 +33,8 @@ vehicles_rows = parse_csv(vehicles) # Create vehicles iterator.
 # Group each iterator into a list.
 rows_list = [personal_info_rows, employment_rows, update_status_rows, vehicles_rows]
 
-# Make sure that the ssn for each named tuple in each iterator is equal to the other ssn
-# values in the other named tuples. 
-filtered_rows = filter(lambda x: x[0].ssn == x[1].ssn == x[2].ssn == x[3].ssn, zip(*rows_list))
+# Line up the iterators so that each named tuple in the list has the same serial number.
+filtered_rows = align_all_rows(*rows_list)
 
 # Iterate through the filtered tuple of named tuples and convert each tuple into a single,
 # combined 'Employee' named tuple. Return an iterator of all combined named tuples.
