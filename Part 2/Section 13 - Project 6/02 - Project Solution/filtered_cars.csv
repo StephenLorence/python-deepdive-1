@@ -1,0 +1,6 @@
+car,mpg,cylinders,displacement,horsepower,weight,acceleration,model,origin
+Chevrolet Chevelle Malibu,18.0,8,307.0,130.0,3504,12.0,70,US
+Chevrolet Chevelle Malibu,17.0,6,250.0,100.0,3329,15.5,71,US
+Chevrolet Chevelle Malibu Classic,16.0,6,250.0,100.0,3781,17.0,74,US
+Chevrolete Chevelle Malibu,16.0,6,250.0,105.0,3897,18.5,75,US
+Chevrolet Chevelle Malibu Classic,17.5,8,305.0,140.0,4215,13.0,76,US
