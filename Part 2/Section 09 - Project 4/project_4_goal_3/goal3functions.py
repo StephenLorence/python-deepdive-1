@@ -1,4 +1,4 @@
-# goal2functions
+# goal3functions
 
 import csv
 import itertools
@@ -132,47 +132,3 @@ def align_ssns(*args):
     for secondary in secondaries:
         aligned_rows.append(find_ssn(primary, secondary))
     yield from (zip(primary, *aligned_rows))
-
-
-
-
-# Take in a variable number of iterables of named tuples and
-# align them based on the ssn value of each named tuple.
-'''
-def align_all_rows(*args):
-    args = [list(arg) for arg in args]
-    index = 0
-    # Set the iterable against which to align the others.
-    primary = args[0]
-    # Create the list to build onto. Initially it will just
-    # be equal to the first iterable.
-    final_list = primary
-    # Iterate once for each iterable passed in.
-    while index < len(args)-1:
-        results = []
-        # Grab the next iterable in line to search through.
-        secondary = args[index+1]
-        for p in primary:
-            for s in secondary:
-                # Find the row in the secondary iterable that
-                # has the same ssn as the given row in the primary
-                # iterable, then tack that row onto the result list.
-                if s.ssn == p.ssn:
-                    results.append(s)
-                    break
-        # Initially we can just zip the two sets of named tuples.
-        if index == 0:
-            final_list = list(zip(final_list, results))
-        # Once the elements in the list are themselves lists, we
-        # need to get fancier in order to extend each sub-list with
-        # the new aligned named tuple.
-        else:
-            new_list = []
-            for a, b in zip(final_list, results):
-                # Unpack each neamed tuple from the previous list,
-                # then add the new named tuple to the end.
-                new_list.append([*a, b])
-            final_list = new_list
-        index += 1
-    yield from final_list
-'''

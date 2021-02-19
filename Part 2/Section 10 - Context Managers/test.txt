@@ -1,1 +1,5 @@
+<<<<<<< HEAD
 This is a late parrot!
+=======
+Look on the bright side of life
+>>>>>>> b502659c13e43eb69c327a3bc0d1750718ecf07d

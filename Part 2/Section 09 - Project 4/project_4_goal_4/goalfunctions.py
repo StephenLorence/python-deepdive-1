@@ -1,8 +1,9 @@
-# goal2functions
+# goalfunctions
 
 import csv
 import itertools
 from collections import namedtuple
+from collections import defaultdict
 import datetime
 
 # Iteration functions.
@@ -47,9 +48,14 @@ def clean_vehicles_row(lst):
 
 # Create namedtuple class from header row.
 def create_namedtuple_from_csv_iterator(csv_file):
+    # Grab the file name from the file path.
     filename = clean_filename(csv_file)
+    # Create an iterator from the file.
     csv_iter = csv_iterator(csv_file)
+    # Grab the header row from the iterator.
     header_row = next(csv_iter)
+    # Create the namedtuple class using the file name
+    # as the class name and the header row as the fields.
     return namedtuple(filename, header_row)
 
 # Convert csv file into namedtuple rows.
@@ -133,46 +139,46 @@ def align_ssns(*args):
         aligned_rows.append(find_ssn(primary, secondary))
     yield from (zip(primary, *aligned_rows))
 
-
-
-
-# Take in a variable number of iterables of named tuples and
-# align them based on the ssn value of each named tuple.
 '''
-def align_all_rows(*args):
-    args = [list(arg) for arg in args]
-    index = 0
-    # Set the iterable against which to align the others.
-    primary = args[0]
-    # Create the list to build onto. Initially it will just
-    # be equal to the first iterable.
-    final_list = primary
-    # Iterate once for each iterable passed in.
-    while index < len(args)-1:
-        results = []
-        # Grab the next iterable in line to search through.
-        secondary = args[index+1]
-        for p in primary:
-            for s in secondary:
-                # Find the row in the secondary iterable that
-                # has the same ssn as the given row in the primary
-                # iterable, then tack that row onto the result list.
-                if s.ssn == p.ssn:
-                    results.append(s)
-                    break
-        # Initially we can just zip the two sets of named tuples.
-        if index == 0:
-            final_list = list(zip(final_list, results))
-        # Once the elements in the list are themselves lists, we
-        # need to get fancier in order to extend each sub-list with
-        # the new aligned named tuple.
-        else:
-            new_list = []
-            for a, b in zip(final_list, results):
-                # Unpack each neamed tuple from the previous list,
-                # then add the new named tuple to the end.
-                new_list.append([*a, b])
-            final_list = new_list
-        index += 1
-    yield from final_list
+# Create a dictionary containing vehicle makes and a count
+# of how many times those makes are represented in the given
+# iterable.
+def count_makes(iter):
+    # Create a defaultdict that will return a value of 0 when
+    # provided with a key that doesn't exist in the dictionary.
+    vehicle_dict = defaultdict(int)
+    # Run through the iterable and add 1 to the value of the
+    # given vehicle make for each named tuple.
+    for emp in iter:
+        vehicle_dict[emp.vehicle_make] += 1
+    return vehicle_dict
+
+# Take in a dictionary of vehicle makes and counts. Return the
+# vehicle make (or makes) with the single highest count, then
+# print out the make(s) and the count.
+def find_max_makes(dictionary):
+    # Look through the dictionary and return the value from the
+    # key:value pair with the highest value.
+    max_value = max(dictionary.items(), key=lambda x: x[1])[1]
+    # Take the maximum value and find all makes with that value
+    # in the dictionary. This is to double check whether there are
+    # more than one make that share the same high value.
+    max_make = [k for k, v in dictionary.items() if v == max_value]
+    print(f'  Most popular make(s): {max_make}\n    Quantity: {max_value}')
 '''
+
+# Create a group key function for use when sorting and grouping data.
+def group_key(item):
+    return item.vehicle_make
+
+# Take in the combined employee data, filter it by gender, sort by
+# vehicle make, group by vehicle make, 
+def group_data(input_data, gender):
+    # Filter the employees by gender.
+    filtered_employees = filter(lambda x: x.gender == gender, input_data)
+    # Sort the employees by vehicle make.
+    sorted_data = sorted(filtered_employees, key=group_key)
+    # Group the sorted employees by vehicle make.
+    groups = itertools.groupby(sorted_data, key=group_key)
+    group_counts = ((g[0], len(list(g[1]))) for g in groups)
+    yield from sorted(group_counts, key=lambda row: row[1], reverse=True)
