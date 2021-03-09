@@ -1,0 +1,4 @@
+Exception ignored in: <function Person.__del__ at 0x0000026BA1B44708>
+Traceback (most recent call last):
+  File "<ipython-input-34-6ed6e62e38b8>", line 3, in __del__
+ValueError: Something went bump...
