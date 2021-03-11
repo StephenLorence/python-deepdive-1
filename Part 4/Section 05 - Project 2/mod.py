@@ -1,3 +1,6 @@
+from functools import total_ordering
+
+@total_ordering
 class Mod:
     def __init__(self, value, modulus):
         self._modulus = Mod._validate_modulus(modulus)
@@ -70,3 +73,31 @@ class Mod:
     def __pow__(self, other):
         other = self._math_prep(other)
         return Mod(self.value ** other.value, self.modulus)
+    
+    def __iadd__(self, other):
+        other = self._math_prep(other)
+        new_mod = Mod(self.value + other.value, self.modulus)
+        self._value = new_mod.value
+        return self
+    
+    def __isub__(self, other):
+        other = self._math_prep(other)
+        new_mod = Mod(self.value - other.value, self.modulus)
+        self._value = new_mod.value
+        return self
+    
+    def __imul__(self, other):
+        other = self._math_prep(other)
+        new_mod = Mod(self.value * other.value, self.modulus)
+        self._value = new_mod.value
+        return self
+    
+    def __ipow__(self, other):
+        other = self._math_prep(other)
+        new_mod = Mod(self.value ** other.value, self.modulus)
+        self._value = new_mod.value
+        return self
+    
+    def __lt__(self, other):
+        other = self._math_prep(other)
+        return self.value < other.value

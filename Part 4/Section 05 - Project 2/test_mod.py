@@ -154,9 +154,105 @@ def test_mod_pow(mod_22, mod_127, test_value, mod_22_result, mod_127_result):
         with pytest.raises(ValueError):
             mod_22 ** test_value
     else:
-        assert mod_22 ** test_value == mod_22_result
+        old_id = id(mod_22)
+        new_mod = mod_22 ** test_value
+        assert new_mod.value == mod_22_result
+        assert old_id != id(new_mod)
     if type(mod_127_result) == type and issubclass(mod_127_result, Exception):
         with pytest.raises(ValueError):
             mod_127 ** test_value
     else:
-        assert mod_127 ** test_value == mod_127_result
+        old_id = id(mod_127)
+        new_mod = mod_127 ** test_value
+        assert new_mod.value == mod_127_result
+        assert old_id != id(new_mod)
+
+@pytest.mark.parametrize('test_value, mod_22_result, mod_127_result', [
+                                                  (Mod(5, 3), ValueError, ValueError),
+                                                  (Mod(7, 2), 1, ValueError),
+                                                  (5, 1, 3),
+                                                  (2, 0, 0),
+                                                  (0, 0, 5),
+                                                  (Mod(3, 7), ValueError, 1)
+                                                  ])
+def test_mod_iadd(mod_22, mod_127, test_value, mod_22_result, mod_127_result):
+    if type(mod_22_result) == type and issubclass(mod_22_result, Exception):
+        with pytest.raises(ValueError):
+            mod_22 += test_value
+    else:
+        old_id = id(mod_22)
+        mod_22 += test_value
+        assert mod_22.value == mod_22_result
+        assert old_id == id(mod_22)
+    if type(mod_127_result) == type and issubclass(mod_127_result, Exception):
+        with pytest.raises(ValueError):
+            mod_127 += test_value
+    else:
+        old_id = id(mod_127)
+        mod_127 += test_value
+        assert mod_127.value == mod_127_result
+        assert old_id == id(mod_127)
+
+def test_mod_isub(mod_127):
+    with pytest.raises(AttributeError):
+        mod_127 -= 'hello'
+
+    with pytest.raises(ValueError):
+        mod_127 -= Mod(3, 5)
+
+    old_id = id(mod_127)
+    mod_127 -= 5
+    assert mod_127.value == 0
+    assert old_id == id(mod_127)
+
+    mod_127 -= Mod(4, 7)
+    assert mod_127.value == 3
+    assert old_id == id(mod_127)
+
+def test_mod_imul(mod_127):
+    with pytest.raises(AttributeError):
+        mod_127 *= 'hello'
+
+    with pytest.raises(ValueError):
+        mod_127 *= Mod(3, 5)
+
+    old_id = id(mod_127)
+    mod_127 *= 5
+    assert mod_127.value == 4
+    assert old_id == id(mod_127)
+
+    mod_127 *= Mod(4, 7)
+    assert mod_127.value == 2
+    assert old_id == id(mod_127)
+
+def test_mod_ipow(mod_127):
+    with pytest.raises(AttributeError):
+        mod_127 **= 'hello'
+
+    with pytest.raises(ValueError):
+        mod_127 **= Mod(3, 5)
+
+    old_id = id(mod_127)
+    mod_127 **= 5
+    assert mod_127.value == 3
+    assert old_id == id(mod_127)
+
+    mod_127 **= Mod(4, 7)
+    assert mod_127.value == 4
+    assert old_id == id(mod_127)
+
+def test_ordering(mod_127):
+    assert mod_127 > 3
+    assert mod_127 >= 5
+    assert mod_127 < 6
+    assert mod_127 <= 5
+    
+    assert mod_127 > Mod(2, 7)
+    assert mod_127 >= Mod(19, 7)
+    assert mod_127 < Mod(6, 7)
+    assert mod_127 <= Mod(6, 7)
+
+    with pytest.raises(AttributeError):
+        mod_127 < 'hello'
+    with pytest.raises(ValueError):
+        mod_127 > Mod(5, 3)
