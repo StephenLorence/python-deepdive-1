@@ -69,13 +69,17 @@ def test_equal_int_mod(mod_22):
     assert 6 == mod_22
 
 def test_not_equal_mod_str(mod_02):
-    assert mod_02 != 'test string'
+    with pytest.raises(AttributeError):
+        mod_02 != 'test string'
+        mod_02 == 'test string'
 
 def test_not_equal_mod_int(mod_22):
     assert mod_22 != 3
 
 def test_not_equal_2_mods(mod_22, mod_53):
-    assert mod_22 != mod_53
+    with pytest.raises(ValueError):
+        mod_22 != mod_53
+        mod_22 == mod_53
 
 def test_equal_mod_equal_hash(mod_02, mod_22):
     assert hash(mod_02) == hash(mod_22)
@@ -196,6 +200,7 @@ def test_mod_iadd(mod_22, mod_127, test_value, mod_22_result, mod_127_result):
 def test_mod_isub(mod_127):
     with pytest.raises(AttributeError):
         mod_127 -= 'hello'
+        mod_127 -= 'test'
 
     with pytest.raises(ValueError):
         mod_127 -= Mod(3, 5)
@@ -256,3 +261,7 @@ def test_ordering(mod_127):
         mod_127 < 'hello'
     with pytest.raises(ValueError):
         mod_127 > Mod(5, 3)
+
+def test_negation(mod_127):
+    old_id = id(mod_127)
+    assert -mod_127 == Mod(-12, 7)
