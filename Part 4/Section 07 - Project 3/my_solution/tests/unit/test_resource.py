@@ -2,7 +2,11 @@
 
 import pytest
 
-from inventory import Resource
+from inventory import Resource, CPU
+from copy import deepcopy
+
+res_list = [Resource('CPU', 'AMD', total=50, allocated=5),
+            CPU('Ryzen X900', 'AMD', 8, 'AM4', 130, total=50, allocated=5)]
 
 @pytest.fixture
 def resource_no_name():
@@ -13,7 +17,7 @@ def resource_no_mfg():
     return Resource('CPU', '')
 
 @pytest.fixture
-def ex_res():
+def ex_resource():
     return Resource('CPU', 'AMD', total=50, allocated=5)
 
 def test_resource_init():
@@ -42,6 +46,7 @@ def test_resource_init():
     except TypeError as ex:
         assert str(ex) == 'Value must be an integer.'
 
+@pytest.mark.parametrize('ex_res', deepcopy(res_list))
 def test_resource_purchase(ex_res):
     assert ex_res.total == 50
     assert ex_res.allocated == 5
@@ -49,6 +54,7 @@ def test_resource_purchase(ex_res):
     ex_res.purchase(30)
     assert ex_res.total == 80
 
+@pytest.mark.parametrize('ex_res', deepcopy(res_list))
 def test_resource_purchase_error(ex_res):
     with pytest.raises(Exception):
         ex_res.purchase(-69)
@@ -63,12 +69,14 @@ def test_resource_purchase_error(ex_res):
         assert ex_res.allocated == 5
         assert ex_res.remaining == 45
 
+@pytest.mark.parametrize('ex_res', deepcopy(res_list))
 def test_resource_claim(ex_res):
     ex_res.claim(25)
     assert ex_res.total == 50
     assert ex_res.remaining == 20
     assert ex_res.allocated == 30
 
+@pytest.mark.parametrize('ex_res', deepcopy(res_list))
 def test_resource_claim_error(ex_res):
     try:
         ex_res.claim(50)
@@ -88,6 +96,7 @@ def test_resource_claim_error(ex_res):
             assert ex_res.allocated == 5
             assert ex_res.remaining == 45
 
+@pytest.mark.parametrize('ex_res', deepcopy(res_list))
 def test_resource_freeup(ex_res):
     ex_res.claim(25)
     ex_res.freeup(20)
@@ -95,6 +104,7 @@ def test_resource_freeup(ex_res):
     assert ex_res.allocated == 10
     assert ex_res.remaining == 40
 
+@pytest.mark.parametrize('ex_res', deepcopy(res_list))
 def test_resource_died(ex_res):
     ex_res.died(10)
     assert ex_res.total == 40
@@ -116,11 +126,11 @@ def test_resource_died(ex_res):
         ex_res.died(0)
         ex_res.died(-1)
 
-def test_resource_str(ex_res):
-    assert str(ex_res) == 'CPU'
+def test_resource_str(ex_resource):
+    assert str(ex_resource) == 'CPU'
 
-def test_resource_repr(ex_res):
-    assert repr(ex_res) == 'Resource (name=CPU, manufacturer=AMD)'
+def test_resource_repr(ex_resource):
+    assert repr(ex_resource) == 'Resource (name=CPU, manufacturer=AMD)'
 
-def test_resource_category(ex_res):
-    assert ex_res.category == 'resource'
+def test_resource_category(ex_resource):
+    assert ex_resource.category == 'resource'

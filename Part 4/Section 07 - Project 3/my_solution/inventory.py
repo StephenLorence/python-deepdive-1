@@ -77,5 +77,40 @@ class Resource:
     def __repr__(self):
         return f'{self.__class__.__name__} (name={self.name}, manufacturer={self.manufacturer})'
 
+class CPU(Resource):
+    def __init__(self, name, manufacturer, cores, socket, power_watts, total=0, allocated=0):
+        self._cores = validate_integer(cores)
+        self._socket = validate_string(socket, 'Socket')
+        self._power_watts = validate_integer(power_watts)
+        super().__init__(name, manufacturer, total=total, allocated=allocated)
+
+    @property
+    def cores(self):
+        return self._cores
+
+    @property
+    def socket(self):
+        return self._socket
+
+    @property
+    def power_watts(self):
+        return self._power_watts
+
+    def __repr__(self):
+        return super().__repr__().rstrip(')') + (f', cores={self.cores}, '\
+                                                 f'socket={self.socket}, '\
+                                                 f'power={self.power_watts}W)')
+
+class Storage(Resource):
+    def __init__(self, name, manufacturer, capacity_GB, total=0, allocated=0):
+        self._capacity_GB = validate_integer(capacity_GB)
+        super().__init__(name, manufacturer, total=total, allocated=allocated)
+
+    @property
+    def capacity_GB(self):
+        return self._capacity_GB
+
+    def __repr__(self):
+        return super().__repr__().rstrip(')') + (f', capacity={self.capacity_GB}GB)')
 
     
