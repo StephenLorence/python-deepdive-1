@@ -2,11 +2,14 @@
 
 import pytest
 
-from inventory import Resource, CPU
+from inventory import Resource, CPU, Storage, HDD, SSD
 from copy import deepcopy
 
 res_list = [Resource('CPU', 'AMD', total=50, allocated=5),
-            CPU('Ryzen X900', 'AMD', 8, 'AM4', 130, total=50, allocated=5)]
+            CPU('Ryzen X900', 'AMD', 8, 'AM4', 130, total=50, allocated=5),
+            Storage('12TB Scorpion Black', 'Western Digital', 12_000, 50, 5),
+            HDD('12TB Scorpion Black', 'Western Digital', 12_000, 3.5, 7200, 50, 5),
+            SSD('960 Pro', 'Samsung', 500, 'M.2', 50, 5)]
 
 @pytest.fixture
 def resource_no_name():

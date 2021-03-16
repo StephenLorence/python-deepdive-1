@@ -9,6 +9,11 @@ from copy import deepcopy
 def ex_ssd():
     return SSD('960 Pro', 'Samsung', 500, 'M.2', 100, 35)
 
+def test_ssd_creation_error():
+    with pytest.raises(ValueError):
+        SSD('960 Pro', 'Samsung', 500, 'm2', 100, 35)
+        SSD('960 Pro', 'Samsung', 500, 'test', 100, 35)
+
 def test_ssd_attributes(ex_ssd):
     assert ex_ssd.interface == 'M.2'
 

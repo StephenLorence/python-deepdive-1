@@ -21,7 +21,7 @@ def validate_integer(value, zero_allowed=False):
 
 def validate_hdd_form_factor(value):
     if str(value).strip('"') not in ['2.5', '3.5']:
-        raise ValueError('Form factor must be either 2.5" or 3.5".')
+        raise ValueError('Form factor must be either 2.5" 3.5".or ')
     else:
         return str(value).strip('"') + '"'
 
