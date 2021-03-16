@@ -1,6 +1,8 @@
 # inventory.py
 
-from validators import validate_string, validate_integer
+from validators import (validate_string, validate_integer,
+                       validate_hdd_form_factor, validate_hdd_rpm,
+                       validate_ssd_interface)
 
 class Resource:
 
@@ -112,5 +114,35 @@ class Storage(Resource):
 
     def __repr__(self):
         return super().__repr__().rstrip(')') + (f', capacity={self.capacity_GB}GB)')
+
+class HDD(Storage):
+    def __init__(self, name, manufacturer, capacity_GB, size, rpm, total=0, allocated=0):
+        self._size = validate_hdd_form_factor(size)
+        self._rpm = validate_hdd_rpm(rpm)
+        super().__init__(name, manufacturer, capacity_GB, total=total, allocated=allocated)
+
+    @property
+    def size(self):
+        return self._size
+    
+    @property
+    def rpm(self):
+        return self._rpm
+
+    def __repr__(self):
+        return super().__repr__().rstrip(')') + (f', size={self.size}, '\
+                                                 f'rpm={self.rpm})')
+
+class SSD(Storage):
+    def __init__(self, name, manufacturer, capacity_GB, interface, total=0, allocated=0):
+        self._interface = validate_ssd_interface(interface)
+        super().__init__(name, manufacturer, capacity_GB, total=total, allocated=allocated)
+
+    @property
+    def interface(self):
+        return self._interface
+
+    def __repr__(self):
+        return super().__repr__().rstrip(')') + (f', interface={self.interface})')        
 
     

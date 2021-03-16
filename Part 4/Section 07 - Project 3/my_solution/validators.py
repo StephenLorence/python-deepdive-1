@@ -19,7 +19,7 @@ def validate_integer(value, zero_allowed=False):
             raise ValueError('Value must be greater than zero.') 
     return value
 
-def validate_storage_form_factor(value):
+def validate_hdd_form_factor(value):
     if str(value).strip('"') not in ['2.5', '3.5']:
         raise ValueError('Form factor must be either 2.5" or 3.5".')
     else:
@@ -32,3 +32,15 @@ def validate_hdd_rpm(value):
     if value % 100:
         raise ValueError('RPM must be a multiple of 100.')
     return value
+
+def validate_ssd_interface(value):
+    inter_dict = {
+        'pcie': 'PCIe',
+        'sata': 'SATA',
+        'msata': 'mSATA',
+        'm.2': 'M.2'
+    }
+    try:
+        return inter_dict[value.lower()]
+    except KeyError as ex:
+        raise ValueError(f'Interface must be one of the following: {tuple(inter_dict.values())}') from None
