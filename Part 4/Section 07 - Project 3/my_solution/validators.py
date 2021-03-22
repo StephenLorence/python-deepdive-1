@@ -6,7 +6,7 @@ def validate_string(value, name):
         raise ValueError(f'{name} must not be empty.')
     return value
 
-def validate_integer(value, zero_allowed=False):
+def validate_integer(value: int, zero_allowed=False):
     try:
         value = int(value)
     except ValueError:

@@ -61,13 +61,12 @@ class Resource:
 
     def died(self, qty):
         qty = validate_integer(qty)
-        if qty > self.total:
-            raise ValueError('Cannot kill more than total stock quantity.')
+        if qty > self.allocated:
+            raise ValueError('Cannot kill more than allocated.')
         else:
             self._total -= qty
+            self._allocated -= qty
             self._remaining = None
-            if self.total <= self.allocated:
-                self._allocated = self.total
         print(f'{qty} unit' + ('s' if qty > 1 else '') + ' died.'
                f'\nNew total: {self.total}'
                f'\nAllocated: {self.allocated}'

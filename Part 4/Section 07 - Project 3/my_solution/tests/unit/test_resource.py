@@ -109,20 +109,15 @@ def test_resource_freeup(ex_res):
 
 @pytest.mark.parametrize('ex_res', deepcopy(res_list))
 def test_resource_died(ex_res):
-    ex_res.died(10)
-    assert ex_res.total == 40
-    assert ex_res.allocated == 5
-    assert ex_res.remaining == 35
+    ex_res.died(3)
+    assert ex_res.total == 47
+    assert ex_res.allocated == 2
+    assert ex_res.remaining == 45
 
-    ex_res.died(35)
-    assert ex_res.total == 5
-    assert ex_res.allocated == 5
-    assert ex_res.remaining == 0
-
-    ex_res.died(1)
-    assert ex_res.total == 4
-    assert ex_res.allocated == 4
-    assert ex_res.remaining == 0
+    ex_res.died(2)
+    assert ex_res.total == 45
+    assert ex_res.allocated == 0
+    assert ex_res.remaining == 45
 
     with pytest.raises(ValueError):
         ex_res.died(6)
